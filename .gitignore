@@ -1,0 +1,8 @@
+# ignore IDE stuff
+.vscode/
+
+# ignore contents of the folders, but keep them in git
+out/*
+!out/.gitkeep
+dumps/*
+!dumps/.gitkeep
