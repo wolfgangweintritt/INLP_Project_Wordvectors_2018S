@@ -56,7 +56,7 @@ if not os.path.exists(config):
 
 cfg = Config(config)
 
-if not cache or not os.path.exists(cache):
+if (not cache or not os.path.exists(cache)) and (not model_input or not os.path.exists(model_input)):
     # if no corpus cache was specified, build one
     if not glob.glob(wiki_file):
         print("Could not find Wiki Dump: %s" % wiki_file)
