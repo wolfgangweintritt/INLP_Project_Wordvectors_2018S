@@ -1,17 +1,19 @@
 {
     "word2vec": {
-        "size": 100,
+        "size": 200,
         "window": 5,
-        "min_count": 5
+        "min_count": 5,
+        "sg": 0,
+        "seed": 0
     },
     "topics": [
         {
             "name": "it",
-            "words": ["mouse", "tree", "memory", "algorithm", "heuristic"]
+            "words": ["mouse", "tree", "neural", "memory", "algorithm", "heuristic", "processor"]
         },
         {
             "name": "bio",
-            "words": ["mouse", "tree", "dog", "organic"]
+            "words": ["mouse", "tree", "neural", "dog", "organic", "fur", "urine"]
         }
     ]
 }
