@@ -8,3 +8,6 @@ dumps/*
 !dumps/.gitkeep
 model/*
 !model/.gitkeep
+config/*
+!config/.gitkeep
+!config/default
