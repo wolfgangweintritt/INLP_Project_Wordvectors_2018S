@@ -51,6 +51,11 @@ if model_input is not None and not model_input.startswith("model/"):
 if not config.startswith("config/"):
     config = "config/" + config
 
+if not os.path.exists(config):
+    print("Could not find configuration file '%s'" % config)
+
+cfg = Config(config)
+
 if not cache or not os.path.exists(cache):
     # if no corpus cache was specified, build one
     if not glob.glob(wiki_file):
@@ -105,7 +110,19 @@ if model_input is None:
     model.save(model_output)
     vprint("Done.")
 
-print(model)
-print(model.wv.most_similar("mouse"))
 # reduce the vectors to a space where we can plot it
 pca = PCA(n_components=2)
+
+print("Non-Overlapping words:")
+print("-" * 20)
+for word in cfg.non_overlapping_words:
+    print("'%s': %s" % (word, model.wv.most_similar(word)))
+    print()
+
+print("=" * 20)
+print()
+print("Overlapping words:")
+print("-" * 20)
+for word in cfg.overlapping_words:
+    print("'%s': %s" % (word, model.wv.most_similar(word)))
+    print()
