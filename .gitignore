@@ -6,3 +6,5 @@ out/*
 !out/.gitkeep
 dumps/*
 !dumps/.gitkeep
+model/*
+!model/.gitkeep
