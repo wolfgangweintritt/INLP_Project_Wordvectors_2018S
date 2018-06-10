@@ -2,6 +2,8 @@
 
 from gensim.models import FastText, Word2Vec
 from gensim.models.word2vec import LineSentence
+from sklearn.decomposition import PCA
+from util.config import Config
 import argparse
 import datetime
 import gensim.corpora
@@ -25,6 +27,7 @@ ap.add_argument("--use-cache", "-c", help="Skip the Corpus Creation and use dump
 ap.add_argument("--cache-output", "-o", help="File name for the cache ouptput (base directory: out/)", default="cache.txt")
 ap.add_argument("--word-vector-output", "-O", help="File name for the saved Word Vector model (base directory: model/)", default="word2vec")
 ap.add_argument("--word-vector-model", "-m", help="File name for the Word Vectors to load instead of train")
+ap.add_argument("--config", "-C", help="Configuration file to use (base directory: config/)", default="default")
 
 args         = ap.parse_args()
 wiki_file    = args.wiki_dump_file
@@ -33,16 +36,20 @@ cache        = args.use_cache
 cache_output = args.cache_output
 model_input  = args.word_vector_model
 model_output = args.word_vector_output
+config       = args.config
 
 # make the variables usable
-if not cache.startswith("out/"):
-    cache = "out/" + cache
-
 if not model_output.startswith("model/"):
     model_output = "model/" + model_output
 
+if cache is not None and not cache.startswith("out/"):
+    cache = "out/" + cache
+
 if model_input is not None and not model_input.startswith("model/"):
     model_input = "model/" + model_input
+
+if not config.startswith("config/"):
+    config = "config/" + config
 
 if not cache or not os.path.exists(cache):
     # if no corpus cache was specified, build one
@@ -84,7 +91,7 @@ else:
 if model_input is None or not os.path.exists(model_input):
     # if no input model is supplied, we have to train it...
     vprint("Training Word2Vec...")
-    model = Word2Vec(inp, size=100, window=5, min_count=5, workers=multiprocessing.cpu_count())
+    model = Word2Vec(inp, workers=multiprocessing.cpu_count(), **cfg.word2vec)
     vprint("Done.")
 else:
     # else, we just fetch the input model
@@ -100,3 +107,5 @@ if model_input is None:
 
 print(model)
 print(model.wv.most_similar("mouse"))
+# reduce the vectors to a space where we can plot it
+pca = PCA(n_components=2)
