@@ -1,5 +1,6 @@
 # ignore IDE stuff
 .vscode/
+.idea/
 
 # ignore contents of the folders, but keep them in git
 out/*
