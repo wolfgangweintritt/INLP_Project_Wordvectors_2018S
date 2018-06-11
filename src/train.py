@@ -10,6 +10,7 @@ import gensim.corpora
 import glob
 import multiprocessing
 import os.path
+import matplotlib.pyplot as plt
 
 def vprint(*args, **kwargs):
     # logging function that is only enabled when the verbose flag is given
@@ -24,7 +25,7 @@ ap = argparse.ArgumentParser(description=descr, epilog=epi)
 ap.add_argument("--wiki-dump-file", "-w", help="Location of the Wikipedia Dump file", default="dumps/enwiki-*-pages-articles.xml.bz2")
 ap.add_argument("--verbose", "-v", help="Enable verbose output", action="store_true")
 ap.add_argument("--use-cache", "-c", help="Skip the Corpus Creation and use dumped cache file (base directory: out/)")
-ap.add_argument("--cache-output", "-o", help="File name for the cache ouptput (base directory: out/)", default="cache.txt")
+ap.add_argument("--cache-output", "-o", help="File name for the cache output (base directory: out/)", default="cache.txt")
 ap.add_argument("--word-vector-output", "-O", help="File name for the saved Word Vector model (base directory: model/)", default="word2vec")
 ap.add_argument("--word-vector-model", "-m", help="File name for the Word Vectors to load instead of train")
 ap.add_argument("--config", "-C", help="Configuration file to use (base directory: config/)", default="default")
@@ -110,9 +111,6 @@ if model_input is None:
     model.save(model_output)
     vprint("Done.")
 
-# reduce the vectors to a space where we can plot it
-pca = PCA(n_components=2)
-
 print("Non-Overlapping words:")
 print("-" * 20)
 for word in cfg.non_overlapping_words:
@@ -126,3 +124,29 @@ print("-" * 20)
 for word in cfg.overlapping_words:
     print("'%s': %s" % (word, model.wv.most_similar(word)))
     print()
+
+
+# do PCA
+# get all word vectors interesting for us.
+all_words = cfg.overlapping_words + [w for w in cfg.non_overlapping_words]
+X = [model.wv[word] for word in all_words]
+# reduce the vectors to a space where we can plot it
+pca = PCA(n_components=2)
+pca.fit(X)
+print("pca: explained variance ratio: {}".format(pca.explained_variance_ratio_))
+X = pca.transform(X)
+xs = X[:, 0]
+ys = X[:, 1]
+
+
+# draw plot via matplotlib
+plt.figure(figsize=(12,8))
+plt.scatter(xs, ys, marker='o')
+for idx, w in enumerate(all_words):
+    plt.annotate(
+        w,
+        xy=(xs[idx], ys[idx]), xytext=(3, 3),
+        textcoords='offset points', ha='left', va='top')
+
+plt.show()
+
