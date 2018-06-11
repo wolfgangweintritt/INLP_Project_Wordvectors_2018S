@@ -126,6 +126,34 @@ for word in cfg.overlapping_words:
     print()
 
 
+
+# some test outputs
+print('\nTest outputs:')
+print('=' * 20)
+print('model similarity man, woman: {}\n'.format(model.wv.similarity('woman', 'man')))
+# wie in der VO: word vector multiplicative combination hauptstadt+land, we expect iraq
+print('word vector multiplicative combination country+capital (baghdad, england, london) : {}\n'.format(
+    model.most_similar_cosmul(positive=['baghdad', 'england'], negative=['london'])))
+# positive und negative words, we expect queen
+print('model most similar: positive: (woman, king), negative: (man) {}\n'.format(
+    model.most_similar(positive=['woman', 'king'], negative=['man'])))
+
+# stuff which could be interesting
+# positive and negative words, we expect mouse
+print('model most similar: positive: (computer, input, device), negative: (keyboard): {}\n'.format(
+    model.most_similar(positive=['computer', 'input', 'device'], negative=['keyboard'])))
+# touchscreen -> smartphone is kinda like mouse -> computer?, we expect mouse
+print('word vector multiplicative combination device+input (touchscreen, computer, smartphone): {}\n'.format(
+    model.most_similar_cosmul(positive=['touchscreen', 'computer'], negative=['smartphone'])))
+# compare two non-overlapping animals with mouse and another animal
+# there should be more difference, bc of the ambiguity of the word mouse
+print('model similarity cat, rat: {}\n'.format(
+    model.wv.similarity('cat', 'rat')))
+print('model similarity cat, mouse: {}\n'.format(
+    model.wv.similarity('cat', 'mouse')))
+print('=' * 20)
+
+
 # do PCA
 # get all word vectors interesting for us.
 all_words = cfg.overlapping_words + [w for w in cfg.non_overlapping_words]
