@@ -144,13 +144,30 @@ print('model most similar: positive: (computer, input, device), negative: (keybo
     model.most_similar(positive=['computer', 'input', 'device'], negative=['keyboard'])))
 # touchscreen -> smartphone is kinda like mouse -> computer?, we expect mouse
 print('word vector multiplicative combination device+input (touchscreen, computer, smartphone): {}\n'.format(
-    model.most_similar_cosmul(positive=['touchscreen', 'computer'], negative=['smartphone'])))
+    model.most_similar_cosmul(positive=['computer', 'touchscreen'], negative=['smartphone'])))
 # compare two non-overlapping animals with mouse and another animal
 # there should be more difference, bc of the ambiguity of the word mouse
 print('model similarity cat, rat: {}\n'.format(
     model.wv.similarity('cat', 'rat')))
 print('model similarity cat, mouse: {}\n'.format(
     model.wv.similarity('cat', 'mouse')))
+
+print('model similarity neural, brain: {}\n'.format(
+    model.wv.similarity('neural', 'brain')))
+print('model similarity neural, network: {}\n'.format(
+    model.wv.similarity('neural', 'network')))
+
+#tree neural memory
+#Probability of a text under the model:
+#model.score(["He uses the mouse to control the computer".split()])
+#model.score(["He uses the elephant to control the computer".split()])
+
+print('word vector multiplicative combination device+input (tree, brain, neural): {}\n'.format(
+    model.most_similar_cosmul(positive=['tree', 'brain'], negative=['neural'])))
+
+print('word vector multiplicative combination device+input (tree, network, neural): {}\n'.format(
+    model.most_similar_cosmul(positive=['tree', 'network'], negative=['neural'])))
+
 print('=' * 20)
 
 
